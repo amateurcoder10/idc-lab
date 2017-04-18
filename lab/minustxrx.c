@@ -1,0 +1,60 @@
+//receiving side
+#include <dos.h>
+#include <stdio.h>
+#include <conio.h>
+#include<math.h>
+#define PORT1 0x3F8
+#define DELAY 30
+void main(void)
+{
+unsigned char c,ch;
+int i;
+
+int MSR;
+clrscr();
+outportb(PORT1 + 1 , 0); /* Turn off interrupts - Port1 */
+
+//outportb(PORT1 + 3 , 0x80); /* SET DLAB ON */
+//outportb(PORT1 + 0 , 0x03); /* Set Baud rate - Divisor Latch Low Byte */
+
+//outportb(PORT1 + 1 , 0x00); /* Set Baud rate - Divisor Latch High Byte */
+//outportb(PORT1 + 3 , 0x03); /* 8 Bits, No Parity, 1 Stop Bit */
+outportb(PORT1 + 2 , 0x00); /* FIFO Control Register */
+outportb(PORT1 + 4 , 0x00); /* Turn on DTR, RTS, and OUT2 */
+/*delay(DELAY);
+while(1)
+{
+if(MSR&0x20==0x20)
+       {printf("received dsr");
+      break; //	delay(DELAY);}
+      } }
+*/
+while(1)
+{ch=0;
+if(kbhit()){break ;}
+//MSR=inportb(PORT1+6);
+if(inportb(PORT1+6)&0x20==0x20)
+{
+if(inportb(PORT1+6)&0x10)
+  {
+//printf("%d\n",MSR);
+
+//delay(DELAY);
+	for(i=0;i<8;i++)
+	{
+	if(inportb(PORT1+6)&0x10==0x10)
+	//read cts
+	//printf("%d",c);
+	ch=(0x01<<i)|ch;
+	delay(DELAY);
+	}// delay(DELAY);
+	printf("Character is %hx\n and %c",ch,ch);
+
+	delay(DELAY);
+
+
+}  }}
+//MSR=inportb(PORT1+5);
+getch();
+
+}

@@ -1,0 +1,19 @@
+#include<conio.h>
+#include<stdio.h>
+
+void main()
+{int j=85,i;
+clrscr();
+char ch=0;
+	for(i=0;i<8;i++)
+       {
+
+       if(j&0x01)
+	//read cts
+	//printf("%d",c);
+	ch=(0x01<<i)|ch;
+
+	}
+	printf("%hx",ch);
+	      getch();
+	}

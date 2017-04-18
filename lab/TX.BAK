@@ -1,0 +1,52 @@
+// Transmitter simplex.c
+#include<bios.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#include<math.h>
+#include<dos.h>
+
+// Global definitions
+#define COM 0 // Port number COM1
+#define PORT 0x3F8 // Port address
+
+
+void main()
+{
+	char cEntered;
+	int i,j,iChar=0;
+	clrscr();
+
+	outportb(PORT+1,0); // Dissable interrupts
+	outportb(PORT+2,0); // Dissable FIFO registers
+	outportb(PORT+4,0x00); // Setting RTS line low
+
+	while(1)
+	{
+
+		//To transmit a character
+		if(kbhit())
+		{
+			cEntered = getch();
+
+			printf("%c",cEntered);
+			outportb(PORT+4,0x01); // Start bit for the transmission
+			delay(30);
+			for(i=0;i<8;i++) // Transmitting each bit
+			{
+				if((cEntered & 0x01) == 1)
+				outportb(PORT+4,0x03);
+				else outportb(PORT+4,0x01);
+				cEntered = cEntered >> 1;
+				delay(30);
+				//outportb(PORT + 4 ,0x00);
+			      
+				//	printf("%d",i);
+				//delay(30);
+			}
+			outportb(PORT+4,0x00); // Setting RTS line low
+		}
+
+		
+	}
+}
